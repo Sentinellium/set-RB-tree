@@ -12,15 +12,15 @@ struct node
 };
 class RBtree
 {
+    public :
       node *root;
       node *q;
-   public :
       RBtree()
       {
               q=NULL;
               root=NULL;
       }
-      void insert();
+      void insert(int);
       void insertfix(node *);
       void leftrotate(node *);
       void rightrotate(node *);
@@ -30,12 +30,32 @@ class RBtree
       void disp();
       void display( node *);
       void search();
+      void Intersection(node *);
+      void Union(node *);
 };
-void RBtree::insert()
+
+void trans(node *p,int *i,int *mas){
+   if(p != NULL){
+       mas[*i] = p->key;
+       *i += 1;
+       trans(p->left,i,mas);
+       trans(p->right,i,mas);
+   }
+}
+
+void num(node *p,int *i){
+   if(p != NULL){
+       *i += 1;
+       num(p->left,i);
+       num(p->right,i);
+   }
+}
+
+void RBtree::insert(int z)
 {
-     int z,i=0;
-     cout<<"\nEnter key of the node to be inserted: ";
-     cin>>z;
+     int i=0;
+     //cout<<"\nEnter key of the node to be inserted: ";
+     //cin>>z;
      node *p,*q;
      node *t=new node;
      t->key=z;
@@ -131,7 +151,6 @@ void RBtree::insertfix(node *t)
            root->color='b';
      }
 }
-
 void RBtree::del()
 {
      if(root==NULL)
@@ -321,6 +340,7 @@ void RBtree::leftrotate(node *p)
            p->parent=y;
      }
 }
+
 void RBtree::rightrotate(node *p)
 {
      if(p->left==NULL)
@@ -373,6 +393,7 @@ void RBtree::disp()
 {
      display(root);
 }
+
 void RBtree::display(node *p)
 {
      if(root==NULL)
@@ -418,22 +439,71 @@ void RBtree::display(node *p)
      cout<<"\nNo Right Child.\n"*/
      }
 }
-
-
-
-
-
-
-void RBtree::Union(){}
+/*
+void RBtree::Union(node *p){
+    int *m = new int;
+    int *k = new int;
+    *m = 0;
+    *k = 0;
+    num(root,m);
+    num(p,k);
+    int *first = new int [*m];
+    int *second = new int [*k];
+    *m = 0;
+    *k = 0;
+    trans(root,m,first);
+    trans(p,k,second);
+    RBtree *b=new RBtree;
+    for(int s = 0; s <*m ; s++){
+        int h = 0;
+        for(int j = 0;j <*k ; j++){
+            if(first[s] == second[j]){
+                h = 1;
+            }
+        }
+        if(h == 1){
+                b->insert(first[s]);
+        }
+        root=b->root;
+        q=b->q;
+    }
+    delete []first;
+    delete []second;
+}
+*/
 
 void RBtree::Intersection(node *p){
-    for
+    int *m=new int;
+    int *k=new int;
+    *m = 0;
+    *k = 0;
+    num(root,m);
+    num(p,k);
+    int *first=new int [*m];
+    int *second=new int [*k];
+    *m=0;
+    *k=0;
+    trans(root,m,first);
+    trans(p,k,second);
+    for(int s=0;s<*k;s++){
+        cout <<first[s] <<"   " << second[s]<<"   ";
+        }
+    int h=0;
+    for(int s=0;s<*k;s++){
+        h=0;
+        for(int j=0;j<*m;j++){
+            if(second[s]==first[j]){
+                h=1;
+            }
+        }
+        if(h!=1){
+            //cout <<1;
+            insert(second[s]);
+        }
+    }
+    delete []first;
+    delete []second;
 }
-
-
-
-
-
 
 void RBtree::search()
 {
@@ -486,23 +556,26 @@ void RBtree::search()
 
      }
 }
-int num(node *p){
-   int *k=0;
-   int *i;
-   if(k==0){
-       i=0;
-   }
-   else
-       i+=1;
-   while(p!=NULL){
-       num(p->left);
-       num(p->right);
-   }
-}
+
+
+
 int main()
 {
     int ch,y=0;
-    RBtree obj;
+    RBtree obj,obk;
+    for(int i=0;i<3;i++){
+        obj.insert(rand()%10);
+        obk.insert(rand()%10);
+    }
+    //obj.disp();
+    cout <<endl;
+        cout <<endl;
+            cout <<endl;
+    //obk.disp();
+    cout <<endl;
+        cout <<endl;
+            cout <<endl;
+    obj.Intersection(obk.root);
     do
     {
                 cout<<"\n\t RED BLACK TREE " ;
@@ -515,9 +588,9 @@ int main()
                 cin>>ch;
                 switch(ch)
                 {
-                          case 1 : obj.insert();
-                                   cout<<"\nNode Inserted.\n";
-                                   break;
+                          //case 1 : obj.insert();
+                                   //cout<<"\nNode Inserted.\n";
+                                   //break;
                           case 2 : obj.del();
                                    break;
                           case 3 : obj.search();
